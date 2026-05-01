@@ -94,3 +94,11 @@ Fedora 41+ is very aggressive about **cgroups v2** and **SELinux**. If You run i
 - **Restart Docker**: After installing the NVIDIA toolkit, run:
   ```bash
   sudo systemctl restart docker
+
+### 2. Launch the Pipeline  
+1. Create a project folder.
+2. Ensure you have your `/data` (wavs + metadata) and `/models` (base checkpoint) ready.
+3. Drop the `docker-compose.yml` into the folder and run:
+
+```bash
+docker compose up -d
