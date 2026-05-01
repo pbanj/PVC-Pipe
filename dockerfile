@@ -9,7 +9,7 @@ WORKDIR /workspace
 RUN git clone https://github.com/OHF-Voice/piper1-gpl.git
 WORKDIR /workspace/piper1-gpl
 
-# Added 'gradio' to the pip install
+# Install dependencies
 RUN pip3 install --no-cache-dir -e '.[train]' lightning==2.1.0 gradio scikit-build cython librosa pandas tqdm
 RUN bash build_monotonic_align.sh && python setup.py build_ext --inplace
 RUN cp espeakbridge*.so src/piper/espeakbridge.so || true
@@ -19,5 +19,11 @@ RUN sed -i '1i import torch\nimport pathlib\nif hasattr(torch.serialization, "ad
 
 ENV PYTHONPATH="/workspace/piper1-gpl/src:${PYTHONPATH}"
 
-# Fetch both the script AND the UI from your repo
-CMD ["/bin/bash", "-c", "wget -qO /workspace/train.sh https://raw.githubusercontent.com/pbanj/PVC-Pipe/main/train.sh && wget -qO /workspace/app.py https://raw.githubusercontent.com/pbanj/PVC-Pipe/main/app.py && python3 /workspace/app.py"]
+# --- BAKE THE CODE IN ---
+# These files must exist in the root of your PVC-Pipe repo
+COPY train.sh /workspace/train.sh
+COPY app.py /workspace/app.py
+RUN chmod +x /workspace/train.sh
+
+# Start the Web UI directly
+CMD ["python3", "/workspace/app.py"]
