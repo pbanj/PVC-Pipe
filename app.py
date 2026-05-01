@@ -90,21 +90,35 @@ def download_base_model(repo_id, filename):
     except Exception as e:
         yield f"❌ Error: {str(e)}"
 
-# --- 3. Training Logic ---
-def start_training(voice_name, batch_size, epochs, ckpt_interval):
-    # This calls the script inside the container
+# --- Step 3: Training Tab ---
+with gr.Tab("🚀 3. Training"):
+    with gr.Row():
+        v_name = gr.Textbox(label="Voice Name", value="bonder")
+        b_size = gr.Slider(minimum=1, maximum=32, value=8, step=1, label="Batch Size")
+    with gr.Row():
+        # Precision Dropdown
+        precision = gr.Dropdown(
+            choices=["16-mixed", "32"], 
+            value="16-mixed", 
+            label="Trainer Precision", 
+            info="Use 16-mixed for RTX GPUs; 32 for older cards/CPU."
+        )
+        ep = gr.Number(label="Max Epochs", value=10000)
+        intv = gr.Slider(minimum=10, maximum=1000, value=50, step=10, label="Checkpoint Frequency")
+    
+    start_btn = gr.Button("Start Training", variant="primary")
+    train_logs = gr.Textbox(label="Live Training Logs", lines=15, interactive=False)
+
+    # Update the click function to include the precision variable
+    start_btn.click(start_training, [v_name, b_size, ep, intv, precision], train_logs)
+
+# --- Update the start_training function ---
+def start_training(voice_name, batch_size, epochs, ckpt_interval, precision):
     cmd = [
         "/bin/bash", "/workspace/train.sh", 
-        voice_name, str(batch_size), str(epochs), str(checkpoint_interval)
+        voice_name, str(batch_size), str(epochs), str(ckpt_interval), str(precision)
     ]
     
-    process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    
-    output = ""
-    for line in process.stdout:
-        output += line
-        yield output
-
 # --- 4. Main UI Layout (Dark Theme) ---
 # We use Soft theme with Purple accent for a clean "Dev" look
 with gr.Blocks(title="PVC-Pipe", theme=gr.themes.Soft(primary_hue="purple", secondary_hue="slate")) as demo:
