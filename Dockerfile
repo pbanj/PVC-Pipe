@@ -1,29 +1,34 @@
 FROM nvidia/cuda:12.1.1-cudnn8-devel-ubuntu22.04
 ENV DEBIAN_FRONTEND=noninteractive
 
+# 1. Install system tools and build-essential for C++ compilation
 RUN apt-get update && apt-get install -y \
-    git python3 python3-pip build-essential cmake ninja-build espeak-ng libsndfile1-dev wget zip \
+    python3 \
+    python3-pip \
+    python3-dev \
+    build-essential \
+    git \
+    ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
-RUN git clone https://github.com/OHF-Voice/piper1-gpl.git
-WORKDIR /workspace/piper1-gpl
 
-# Install dependencies
-RUN pip3 install --no-cache-dir -e '.[train]' lightning==2.1.0 gradio scikit-build cython librosa pandas tqdm
-RUN bash build_monotonic_align.sh && python setup.py build_ext --inplace
-RUN cp espeakbridge*.so src/piper/espeakbridge.so || true
+# 2. Clone the official repository so it's guaranteed to be there
+RUN git clone https://github.com/rhasspy/piper1-gpl.git
 
-# PyTorch 2.6 patch
-RUN sed -i '1i import torch\nimport pathlib\nif hasattr(torch.serialization, "add_safe_globals"):\n    torch.serialization.add_safe_globals([pathlib.PosixPath, pathlib.WindowsPath])\n' src/piper/__init__.py
+# 3. Copy your specific UI, train.sh, and entrypoint.sh
+COPY . .
 
-ENV PYTHONPATH="/workspace/piper1-gpl/src:${PYTHONPATH}"
+# 4. Compile the C++ extensions (The "Bonder" heart)
+RUN cd piper1-gpl && \
+    python3 -m pip install -e . && \
+    bash build_monotonic_align.sh && \
+    python3 setup.py build_ext --inplace
 
-COPY train.sh /workspace/train.sh
-COPY app.py /workspace/app.py
-COPY entrypoint.sh /workspace/entrypoint.sh
+# 5. Install UI dependencies
+RUN pip3 install --no-cache-dir -r requirements.txt
 
-RUN chmod +x /workspace/train.sh /workspace/entrypoint.sh
+# 6. Ensure scripts are executable (Just in case Git stripped permissions)
+RUN chmod +x /workspace/entrypoint.sh /workspace/train.sh
 
-# The entrypoint handles the "Pre-flight" and then launches app.py
-ENTRYPOINT ["/workspace/entrypoint.sh"]
+ENTRYPOINT ["/bin/bash", "/workspace/entrypoint.sh"]
