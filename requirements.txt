@@ -1,0 +1,7 @@
+gradio
+librosa
+pandas
+tqdm
+huggingface_hub
+torch
+lightning==2.1.0
