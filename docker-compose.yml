@@ -1,17 +1,18 @@
 services:
   pvc-pipe:
-    # Pulls the pre-built image directly from GitHub
     image: ghcr.io/pbanj/pvc-pipe:latest
     container_name: pvc_pipe_trainer
     security_opt:
       - no-new-privileges:true
+    # Ensures files created by the container belong to YOU, not root. Change to match your actual ones
+    user: "${UID:-1000}:${GID:-1000}"
     # set your huggingface token in your .env file "HF_TOKEN=yourapi key"
     environment:
       - HF_TOKEN=${HF_TOKEN}
     ports:
       - "7860:7860"
     volumes:
-      # Users still need to provide their own local data and model folders
+      # You need to make the folders. Prevents any weird docker bullshit.
       - /changeme/pvc/data:/workspace/data
       - /changeme/pvc/models:/workspace/models
       # To use a custom training script instead of the provided one,
