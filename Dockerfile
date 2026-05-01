@@ -7,17 +7,20 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     build-essential \
     cmake \
+    ninja-build \
     git \
     ffmpeg \
     && rm -rf /var/lib/apt/lists/*
 
-# Fix for potential "command not found" - link python3 to python
 RUN ln -s /usr/bin/python3 /usr/bin/python
+RUN pip3 install --no-cache-dir Cython scikit-build setuptools wheel
 
-WORKDIR /workspace
-
-# Clone the OHF repo
 RUN git clone https://github.com/OHF-Voice/piper1-gpl.git
+
+RUN cd /workspace/piper1-gpl && \
+    pip3 install -e . && \
+    python3 setup.py build_ext --inplace
+
 
 COPY . .
 
