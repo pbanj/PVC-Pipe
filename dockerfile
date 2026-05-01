@@ -19,8 +19,6 @@ RUN sed -i '1i import torch\nimport pathlib\nif hasattr(torch.serialization, "ad
 
 ENV PYTHONPATH="/workspace/piper1-gpl/src:${PYTHONPATH}"
 
-# --- BAKE THE CODE IN ---
-# These files must exist in the root of your PVC-Pipe repo
 COPY train.sh /workspace/train.sh
 COPY app.py /workspace/app.py
 RUN chmod +x /workspace/train.sh
