@@ -5,6 +5,9 @@ services:
     container_name: pvc_pipe_trainer
     security_opt:
       - no-new-privileges:true
+    # set your huggingface token in your .env file "HF_TOKEN=yourapi key"
+    environment:
+      - HF_TOKEN=${HF_TOKEN}
     ports:
       - "7860:7860"
     volumes:
