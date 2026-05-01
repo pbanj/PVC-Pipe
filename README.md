@@ -5,7 +5,7 @@ This repo serves as a home for the files for training piper voices in Google col
 Full disclosure, had geminni help with parts. Mostly formatting and estimates.  
 AI is really great at readmes so that's nice at least. a bit emoji heavy but meh.  
 I did this because of the hell of dealing with AI trying to get it working. No one should have to argue as much with an AI as I did through all of this.  
-~~It doesnt know I added this as I didn't want it to start delelting things because it felt like a failure.~~  
+It doesnt know I added this ~~as I didn't want it to start delelting things because it felt like a failure.~~  
 It deleted shit out of the files anyways and then argued about it when I added them back.
 
 
