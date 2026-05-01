@@ -1,0 +1,26 @@
+services:
+  pvc-pipe:
+    # Pulls the pre-built image directly from GitHub
+    image: ghcr.io/pbanj/pvc-pipe:latest
+    container_name: pvc_pipe_trainer
+    security_opt:
+      - no-new-privileges:true
+    ports:
+      - "7860:7860"
+    volumes:
+      # Users still need to provide their own local data and model folders
+      - /changeme/pvc/data:/workspace/data
+      - /changeme/pvc/models:/workspace/models
+      # To use a custom training script instead of the provided one,
+      # place your own 'train.sh' in this folder and uncomment the line below:
+      # - /changeme/pvc/train.sh:/workspace/train.sh      
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    stdin_open: true
+    tty: true
+    restart: unless-stopped
