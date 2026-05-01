@@ -21,7 +21,9 @@ ENV PYTHONPATH="/workspace/piper1-gpl/src:${PYTHONPATH}"
 
 COPY train.sh /workspace/train.sh
 COPY app.py /workspace/app.py
-RUN chmod +x /workspace/train.sh
+COPY entrypoint.sh /workspace/entrypoint.sh
 
-# Start the Web UI directly
-CMD ["python3", "/workspace/app.py"]
+RUN chmod +x /workspace/train.sh /workspace/entrypoint.sh
+
+# The entrypoint handles the "Pre-flight" and then launches app.py
+ENTRYPOINT ["/workspace/entrypoint.sh"]
