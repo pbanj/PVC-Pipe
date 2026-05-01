@@ -9,6 +9,8 @@ services:
     # set your huggingface token in your .env file "HF_TOKEN=yourapi key"
     environment:
       - HF_TOKEN=${HF_TOKEN}
+      # Forces Python to print logs immediately so they show up in the UI
+      - PYTHONUNBUFFERED=1
     ports:
       - "7860:7860"
     volumes:
