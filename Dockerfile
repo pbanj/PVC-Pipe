@@ -15,28 +15,20 @@ RUN apt-get update && apt-get install -y \
 RUN ln -s /usr/bin/python3 /usr/bin/python
 RUN pip3 install --no-cache-dir Cython scikit-build setuptools wheel
 
-RUN git clone https://github.com/OHF-Voice/piper1-gpl.git
-
-RUN cd /workspace/piper1-gpl && \
-    pip3 install -e . && \
-    python3 setup.py build_ext --inplace
-
-
+WORKDIR /workspace
 COPY . .
 
-RUN pip3 install --no-cache-dir Cython wheel setuptools
+RUN git clone https://github.com/OHF-Voice/piper1-gpl.git /workspace/piper1-gpl
+
+WORKDIR /workspace/piper1-gpl
 
 
+RUN pip3 install -e . && \
+    python3 setup.py build_ext --inplace
+
+
+WORKDIR /workspace
 RUN pip3 install --no-cache-dir -r requirements.txt
-
-RUN cd /workspace/piper1-gpl && \
-    pip3 install -e . && \
-    python3 setup.py build_ext --inplace
-RUN cd /workspace/piper1-gpl && \
-    pip3 install -e . && \
-    /bin/bash build_monotonic_align.sh && \
-    python3 setup.py build_ext --inplace
-
 RUN chmod +x /workspace/entrypoint.sh /workspace/train.sh
 
 ENTRYPOINT ["/bin/bash", "/workspace/entrypoint.sh"]
