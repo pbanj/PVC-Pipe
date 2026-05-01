@@ -2,6 +2,13 @@ name: Publish PVC-Pipe Image
 on:
   push:
     branches: ['main']
+    # Add this section:
+    paths-ignore:
+      - '**.ipynb'          # Any Jupyter Notebook file anywhere
+      - 'README.md'         # The main Readme
+      - 'docs/**'           # Anything in a documentation folder
+      - '.gitignore'        # Git configuration
+      - 'docker-compose.yml' # Docker local orchestration files
   workflow_dispatch:
 
 jobs:
