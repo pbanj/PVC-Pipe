@@ -58,7 +58,7 @@ Choosing the right number of epochs depends on your goal. Here is how they stack
 | Version | Link | Description |
 | :--- | :--- | :--- |
 | **Stable** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/drive/17ONoKTuu-Fz53feKn9F2QSbg5pXvsl7r?usp=sharing) | Static version that works. |
-| **Dev** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pbanj/PVC-Pipe/blob/main/PVC_Pipe_Trainer.ipynb) | Latest code synced directly from this repo. Might not work.|
+| **Dev** | [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/pbanj/PVC-Pipe/blob/main/PVC_Pipe.ipynb) | Latest code synced directly from this repo. Might not work.|
 
 
 ### 📦 Model Tiers & File Sizes
